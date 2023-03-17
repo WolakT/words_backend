@@ -5,7 +5,11 @@ __pycache__/
 
 # C extensions
 *.so
-
+#vim files
+*~
+*.swp
+#Virtualenv data
+flv/*
 # Distribution / packaging
 .Python
 build/
