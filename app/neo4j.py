@@ -11,7 +11,6 @@ def init_driver(uri, username, password):
     return current_app.driver
 
 
-
 """
 Get the instance of the Neo4j Driver created in the `initDriver` function
 """
