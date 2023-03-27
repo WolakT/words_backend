@@ -5,24 +5,36 @@ from app.dao.words import WordDAO
 words_routes = Blueprint("words", __name__, url_prefix="/api/words")
 
 # tag::list[]
-@words_routes.get('/')
+@words_routes.route('/', methods=['POST', 'GET'])
 def get_words():
-    # Extract pagination values from the request
-    sort = request.args.get("sort", "name")
-    type = request.args.get("type", "Adjective")
-    order = request.args.get("order", "ASC")
-    limit = request.args.get("limit", 6, type=int)
-    skip = request.args.get("skip", 0, type=int)
+    if request.method == "GET":
+        # Extract pagination values from the request
+        sort = request.args.get("sort", "name")
+        type = request.args.get("type", "Adjective")
+        order = request.args.get("order", "ASC")
+        limit = request.args.get("limit", 6, type=int)
+        skip = request.args.get("skip", 0, type=int)
 
 
-    # Create a new MovieDAO Instance
-    dao = WordDAO(current_app.driver)
+        # Create a new MovieDAO Instance
+        dao = WordDAO(current_app.driver)
 
-    # Retrieve a paginated list of movies
-    output = dao.all(type, sort, order, limit=limit, skip=skip)
+        # Retrieve a paginated list of movies
+        output = dao.all(type, sort, order, limit=limit, skip=skip)
 
-    # Return as JSON
-    return jsonify(output)
+        # Return as JSON
+        return jsonify(output)
+    else:
+        name = request.json.get("name")
+        print(f"this is name {name}")
+        type = request.json.get("type")
+        print(f"this is type {type}")
+        pl = request.json.get("pl")
+
+        dao = WordDAO(current_app.driver)
+        output = dao.add(type, name, pl)
+        out = {'write': 'success'}
+        return jsonify(out)
 # end::list[]
 
 

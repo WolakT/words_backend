@@ -38,7 +38,8 @@ def create_app(test_config=None):
 
 
     CORS(app,
-         resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:4200"]}}
+#         resources={r"/*": {"origins": ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:4200"]}}
+         resources={r"/*": {"origins": "*"}}
     )
     app.register_blueprint(words_routes)
 

@@ -19,7 +19,6 @@ class WordDAO:
             # Run the statement within the transaction passed as the first argument
             result = tx.run(cypher, type=type, name=name, pl=pl)
 
-            # Extract a list of Movies from the Result
             return result.single()
 
         with self.driver.session() as session:
