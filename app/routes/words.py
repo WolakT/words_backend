@@ -5,8 +5,9 @@ from app.dao.words import WordDAO
 words_routes = Blueprint("words", __name__, url_prefix="/api/words")
 
 # tag::list[]
-@words_routes.route('/', methods=['POST', 'GET'])
+@words_routes.route('/', methods=['POST', 'GET', 'DELETE'])
 def get_words():
+    dao = WordDAO(current_app.driver)
     if request.method == "GET":
         # Extract pagination values from the request
         sort = request.args.get("sort", "name")
@@ -16,13 +17,17 @@ def get_words():
         skip = request.args.get("skip", 0, type=int)
 
 
-        # Create a new MovieDAO Instance
-        dao = WordDAO(current_app.driver)
+#        # Create a new MovieDAO Instance
+#        dao = WordDAO(current_app.driver)
 
         # Retrieve a paginated list of movies
         output = dao.all(type, sort, order, limit=limit, skip=skip)
 
         # Return as JSON
+        return jsonify(output)
+    if request.method == "DELETE":
+        name = request.json.get("name")
+        output = dao.remove(name)
         return jsonify(output)
     else:
         name = request.json.get("name")

@@ -24,6 +24,27 @@ class WordDAO:
         with self.driver.session() as session:
             return session.execute_write(add_word, type, name, pl)
 
+    def remove(self, name):
+            # Define a transaction function to delete the HAS_FAVORITE relationship within a Write Transaction
+        def remove_everything(tx, name):
+            row = tx.run("""
+                MATCH (m)
+                WHERE m.name = $name
+                DETACH DELETE m
+            """, name=name)
+
+            print(row)
+            # If no rows are returnedm throw a NotFoundException
+            if row == None:
+                raise NotFoundException()
+
+            return "success"
+
+            # Execute the transaction function within a Write Transaction
+        with self.driver.session() as session:
+            # Return movie details and `favorite` property
+            return session.execute_write(remove_everything, name)
+
     def all(self, type, sort, order, limit=6, skip=0):
         # Define the Unit of Work
         def get_movies(tx, type, sort, order, limit, skip):
