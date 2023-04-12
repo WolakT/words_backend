@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 from .neo4j import init_driver
 from .routes.words import words_routes
+from .routes.words import rels_routes
 
 def create_app(test_config=None):
     # Create and configure app
@@ -42,6 +43,7 @@ def create_app(test_config=None):
          resources={r"/*": {"origins": "*"}}
     )
     app.register_blueprint(words_routes)
+    app.register_blueprint(rels_routes)
 
     @app.route('/', methods=['GET'])
     def index():

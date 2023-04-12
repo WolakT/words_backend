@@ -3,8 +3,8 @@ from flask import Blueprint, current_app, request, jsonify
 from app.dao.words import WordDAO
 
 words_routes = Blueprint("words", __name__, url_prefix="/api/words")
+rels_routes = Blueprint("rels", __name__, url_prefix="/api/rels")
 
-# tag::list[]
 @words_routes.route('/', methods=['POST', 'GET', 'DELETE'])
 def get_words():
     dao = WordDAO(current_app.driver)
@@ -40,8 +40,16 @@ def get_words():
         output = dao.add(type, name, pl)
         out = {'write': 'success'}
         return jsonify(out)
-# end::list[]
 
+@rels_routes.route('/', methods=['POST'])
+def handle_rels():
+    dao = WordDAO(current_app.driver)
+    data = request.get_json()
+    node1_name = data["node1"]
+    node2_name = data["node2"]
+    relationship_name = data["relationship_name"]
+    dao.create_relationship(node1_name, node2_name, relationship_name)
+    return jsonify({"message": "Relationship created successfully"}), 200
 
 #@movie_routes.get('/<movie_id>')
 #def get_movie_details(movie_id):

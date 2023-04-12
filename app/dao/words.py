@@ -67,3 +67,15 @@ class WordDAO:
 
         with self.driver.session() as session:
             return session.execute_read(get_movies, type, sort, order, limit, skip)
+
+    def create_relationship(self, node1_name, node2_name, relationship_name):
+        def add_relationship(tx, node1_name, node2_name, relationship_name):
+            result = tx.run(
+                "MATCH (n1 {name: $node1_name}), (n2 {name: $node2_name}) "
+                "MERGE (n1)-[r:" + relationship_name + "]->(n2) "
+                "RETURN r",
+                node1_name=node1_name, node2_name=node2_name
+            )
+            return result.single()["r"]
+        with self.driver.session() as session:
+            return session.execute_write(add_relationship, node1_name, node2_name, relationship_name)
