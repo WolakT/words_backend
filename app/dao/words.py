@@ -79,3 +79,18 @@ class WordDAO:
             return result.single()["r"]
         with self.driver.session() as session:
             return session.execute_write(add_relationship, node1_name, node2_name, relationship_name)
+
+    def all_labels(self):
+        def get_labels(tx):
+            cypher = """
+            MATCH (n) WITH DISTINCT LABELS(n) AS temp
+            UNWIND temp AS Labels
+            RETURN Labels
+            """
+            result = tx.run(cypher)
+            print("Labels fetched")
+            result_list = [row.value("Labels") for row in result]
+            return result_list
+
+        with self.driver.session() as session:
+            return session.execute_read(get_labels)

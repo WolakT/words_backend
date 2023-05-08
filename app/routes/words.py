@@ -41,6 +41,12 @@ def get_words():
         out = {'write': 'success'}
         return jsonify(out)
 
+@words_routes.route('/labels', methods=['GET'])
+def get_labels():
+    dao = WordDAO(current_app.driver)
+    output = dao.all_labels()
+    return jsonify(output)
+
 @rels_routes.route('/', methods=['POST'])
 def handle_rels():
     dao = WordDAO(current_app.driver)
